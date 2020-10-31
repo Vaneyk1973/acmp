@@ -1,0 +1,67 @@
+import java.io.PrintStream;
+import java.util.*;
+
+public class Main {
+
+    public static Scanner sc = new Scanner(System.in);
+    public static PrintStream out = System.out;
+
+    public static void array_print(int[] n) {
+        for (int i = 0; i < n.length; i++) {
+            out.println(n[i]);
+        }
+    }
+
+    public static void array_print(int[][] n) {
+        for (int i = 0; i < n.length; i++) {
+            for (int j = 0; j < n[i].length; j++) {
+                out.print(n[i][j] + " ");
+            }
+            out.println();
+        }
+    }
+
+    public static void array_print(char[] n) {
+        for (int i = 0; i < n.length; i++) {
+            out.println(n[i]);
+        }
+    }
+
+
+    public static void main(String[] args) {
+        int n = sc.nextInt(), N[] = new int[n], k = sc.nextInt();
+        for (int i = 0; i < n; i++) {
+            N[i] = sc.nextInt();
+        }
+        int[] a = new int[Math.abs(k)], b = new int[n - Math.abs(k)];
+        if (k > 0) {
+            for (int i = 0; i < k; i++) {
+                a[k - i - 1] = N[n - i - 1];
+            }
+            for (int i = 0; i < n - k; i++) {
+                b[i] = N[i];
+            }
+            for (int i = 0; i < k; i++) {
+                N[i] = a[i];
+            }
+            for (int i = k; i < n; i++) {
+                N[i] = b[i - k];
+            }
+        } else {
+            k = Math.abs(k);
+            for (int i = 0; i < k; i++) {
+                a[i] = N[i];
+            }
+            for (int i = 0; i < n - k; i++) {
+                b[i] = N[i + k];
+            }
+            for (int i = 0; i < n - k; i++) {
+                N[i] = b[i];
+            }
+            for (int i = n - k; i < n; i++) {
+                N[i] = a[i - k - 1];
+            }
+        }
+        array_print(N);
+    }
+}
