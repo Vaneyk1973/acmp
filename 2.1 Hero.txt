@@ -1,0 +1,463 @@
+
+
+import java.io.PrintStream;
+import java.util.*;
+
+public class Main {
+    public static Scanner sc = new Scanner(System.in);
+    public static PrintStream out = System.out;
+
+    public static void main(String[] args) {
+        World world = new World();
+        Hero hero1 = new Hero();
+        Hero hero2 = new Hero();
+        hero1.chooseCreature(hero2);
+        hero2.chooseCreature(hero1);
+        double turn;
+        while (!hero1.dead && !hero2.dead) {
+            out.println("Your turn");
+            turn = Math.random() * 10;
+            if (turn >= 3 && turn <= 6) {
+                out.println("You attack");
+                hero1.attack();
+            }
+            if (turn >= 0 && turn < 3) {
+                out.println("You block");
+                hero1.block();
+            }
+            if (turn > 6 && turn <= 10) {
+                out.println("You attack with magic");
+                hero1.magicAttack();
+            }
+            if (hero2.dead) {
+                out.println("You've killed enemy");
+                break;
+            } else {
+                out.println("Enemies stats");
+                hero2.getStats();
+            }
+            out.println("Enemies turn");
+            turn = Math.random() * 10;
+            if (turn >= 3 && turn <= 6) {
+                out.println("Enemy attacks");
+                hero2.attack();
+            }
+            if (turn >= 0 && turn < 3) {
+                out.println("Enemy blocks");
+                hero2.block();
+            }
+            if (turn > 6 && turn <= 10) {
+                out.println("Enemy attacks with magic");
+                hero2.magicAttack();
+            }
+            if (hero1.dead) {
+                out.println("You've been killed");
+                break;
+            } else {
+                out.println("Your stats");
+                hero1.getStats();
+            }
+        }
+    }
+}
+
+ class World {
+    int[][] map = new int[100][100];
+
+    static HashMap<Integer, String> creatures = new HashMap<>();
+    static HashMap<Integer, Integer> creatures_quantity = new HashMap<>();
+    static HashMap<Integer, ArrayList<String>> creatures_names = new HashMap<>();
+    static HashMap<Integer, Integer> items_cost = new HashMap<>();
+    static HashMap<Integer, String> items = new HashMap<>();
+    static ArrayList<Integer> weapons = new ArrayList<>();
+    static ArrayList<Integer> armors = new ArrayList<>();
+    static ArrayList<Integer> defend_items = new ArrayList<>();
+    static HashMap<Integer, Integer> defend_items_stats = new HashMap<>();
+    static HashMap<Integer, Integer> armor_stats = new HashMap<>();
+    static HashMap<Integer, Integer> weapons_stats = new HashMap<>();
+
+    World() {
+        creatures.put(0, "Hero");
+        creatures_quantity.put(0, 0);
+        items.put(0, "Sword");
+        items.put(1, "Shield");
+        items.put(2, "Armor");
+        weapons.add(0);
+        armors.add(2);
+        defend_items.add(1);
+        armor_stats.put(2, 40);
+        defend_items_stats.put(1, 20);
+        weapons_stats.put(0, 10);
+    }
+}
+
+ 
+class Creature {
+    int health, base_damage, experience = 0, x_location, y_location, level, armor = 0, creature_id, creature_number, block_level, added_defense = 0, added_armor = 0, added_damage = 0;
+
+
+    public void getStats() {
+        System.out.println("Health: " + health);
+        System.out.println("Armor: " + (armor));
+        System.out.println("Damage: " + (base_damage));
+        System.out.println("Level: " + level);
+        System.out.println("Experience: " + experience);
+        System.out.print("\n");
+    }
+
+    public String getStatsString() {
+        return "Health: " + health + "\n" + "Armor: " + (armor) + "\n" + "Damage: " + (base_damage) + "\n" + "Level: " + level + "\n" + "Experience: " + experience + "\n";
+    }
+
+
+    boolean dead = false, is_defending = false;
+}
+
+
+class Hero extends Creature {
+    public static Scanner sc = new Scanner(System.in);
+    public static PrintStream out = System.out;
+
+    int gold = 0, inventory_size = 10, stamina = 100;
+    double mana = 10, max_mana = 10;
+    int equipped_weapon, equipped_armor, equipped_defense, chosen_item;
+    boolean is_weapon_equipped = false, is_armor_equipped = false, is_defense_equipped = false;
+
+    Creature chosen_creature;
+    HashMap<Integer, Integer> inventory = new HashMap<>();
+    HashMap<Integer, Integer> items_owned = new HashMap<>();
+
+    Hero() {
+        creature_id = 0;
+        World.creatures_quantity.replace(creature_id, World.creatures_quantity.get(creature_id) + 1);
+        creature_number = World.creatures_quantity.get(creature_id);
+        base_damage = 50;
+        block_level = 5;
+        health = 100;
+        level = 1;
+        x_location = 50;
+        y_location = 50;
+        armor = 10;
+        inventory.put(0, 0);
+        inventory.put(1, 2);
+    }
+
+    public String toString() {
+        return getClass().getName() + "@" + Integer.toHexString(hashCode());
+    }
+
+    public boolean equals(Object obj) {
+        if (obj.getClass() == this.getClass()) {
+            return obj.equals(this);
+        } else return false;
+    }
+
+    public boolean equals(Creature creature) {
+        if (creature.getStatsString() == this.getStatsString())
+            return true;
+        else return false;
+    }
+
+    public void getStats() {
+        out.println("Health: " + health);
+        out.println("Mana: " + mana);
+        out.println("Armor: " + (armor + added_armor));
+        out.println("Damage: " + (base_damage + added_damage));
+        out.println("Gold: " + gold);
+        out.println("Level: " + level);
+        out.println("Experience: " + experience);
+        out.print("\n");
+    }
+
+    public int getGold() {
+        return gold;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public int getX_location() {
+        return x_location;
+    }
+
+    public int getY_location() {
+        return y_location;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int getArmor() {
+        return armor;
+    }
+
+    public int getStamina() {
+        return stamina;
+    }
+
+    public double getMana() {
+        return mana;
+    }
+
+    public void seeInventory() {
+        for (int i = 0; i <= inventory_size; i++) {
+            if (inventory.containsKey(i))
+                out.println(World.items.get(inventory.get(i)));
+        }
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
+    }
+
+    public void setDamage_mult(int base_damage) {
+        this.base_damage = base_damage;
+    }
+
+    public void setGold(int gold) {
+        this.gold = gold;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setStamina(int stamina) {
+        this.stamina = stamina;
+    }
+
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    public void setArmor(int armor) {
+        this.armor = armor;
+    }
+
+    public void setInventory_size(int inventory_size) {
+        this.inventory_size = inventory_size;
+    }
+
+    public void setX_location(int x_location) {
+        this.x_location = x_location;
+    }
+
+    public void setY_location(int y_location) {
+        this.y_location = y_location;
+    }
+
+    public void addExperience(int experience) {
+        this.experience += experience;
+    }
+
+    public void addDamage_mult(int base_damage) {
+        this.base_damage += base_damage;
+    }
+
+    public void addGold(int gold) {
+        this.gold += gold;
+    }
+
+    public void addHealth(int health) {
+        this.health += health;
+    }
+
+    public void addArmor(int armor) {
+        this.armor += armor;
+    }
+
+    public void addInventory_size(int inventory_size) {
+        this.inventory_size += inventory_size;
+    }
+
+    public void subtractExperience(int experience) {
+        this.experience -= experience;
+    }
+
+    public void subtractBase_damage(int base_damage) {
+        this.base_damage -= base_damage;
+    }
+
+    public void subtractGold(int gold) {
+        this.gold -= gold;
+    }
+
+    public void subtractHealth(int health) {
+        this.health -= health;
+    }
+
+    public void subtractArmor(int armor) {
+        this.armor -= armor;
+    }
+
+    public void subtractInventory_size(int inventory_size) {
+        this.inventory_size -= inventory_size;
+    }
+
+    public void chooseCreature(Creature chosen_creature) {
+        this.chosen_creature = chosen_creature;
+    }
+
+    public void move(int x_location, int y_location) {
+        if (mana < max_mana)
+            mana += 0.1;
+        setX_location(this.x_location + x_location);
+        setY_location(this.y_location + y_location);
+    }
+
+    public void seeEquippedItems() {
+        if (is_weapon_equipped)
+            out.println("Weapon: " + World.items.get(equipped_weapon));
+        else out.println("Weapon is not equipped");
+        if (is_armor_equipped)
+            out.println("Armor: " + World.items.get(equipped_armor));
+        else out.println("Armor is not equipped");
+        if (is_defense_equipped)
+            out.println("Defense: " + World.items.get(equipped_defense));
+        else out.println("Defense is not equipped");
+    }
+
+    public void take(int item_id) {
+        if (mana < max_mana)
+            mana += 0.1;
+        if (inventory.size() == inventory_size) {
+            out.println("Your inventory is full");
+        } else {
+            inventory.put(inventory.size(), item_id);
+            items_owned.replace(item_id, items_owned.get(item_id) + 1);
+        }
+    }
+
+    public void give(int item_id) {
+        if (mana < max_mana)
+            mana += 0.1;
+        if (items_owned.get(item_id) == 0) {
+            out.println("You don't have this item");
+        } else {
+            inventory.remove(item_id);
+            items_owned.replace(item_id, items_owned.get(item_id) - 1);
+        }
+    }
+
+    public void buy(int item_id) {
+        if (mana < max_mana)
+            mana += 0.1;
+        if (inventory.size() == 10) {
+            out.println("Your inventory is full");
+        } else {
+            inventory.put(inventory.size(), item_id);
+            subtractGold(World.items_cost.get(item_id));
+            items_owned.replace(item_id, items_owned.get(item_id) + 1);
+        }
+    }
+
+    public void sell(int item_id) {
+        if (mana < max_mana)
+            mana += 0.1;
+        if (items_owned.get(item_id) == 0) {
+            out.println("You don't have this item");
+        } else {
+            inventory.remove(item_id);
+            addGold(World.items_cost.get(item_id));
+            items_owned.replace(item_id, items_owned.get(item_id) - 1);
+        }
+    }
+
+    public void equip(int item_id) {
+        if (mana < max_mana)
+            mana += 0.1;
+        if (inventory.containsValue(item_id)) {
+            if (World.weapons.contains(item_id)) {
+                unequip(equipped_weapon);
+                equipped_weapon = item_id;
+                inventory.remove(item_id);
+                added_damage = World.weapons_stats.get(equipped_weapon);
+                is_weapon_equipped = true;
+            } else if (World.armors.contains(item_id)) {
+                unequip(equipped_armor);
+                equipped_armor = item_id;
+                inventory.remove(item_id);
+                added_armor = World.armor_stats.get(item_id);
+                is_armor_equipped = true;
+            } else if (World.defend_items.contains(item_id)) {
+                unequip(equipped_defense);
+                equipped_defense = item_id;
+                inventory.remove(item_id);
+                added_defense = World.defend_items_stats.get(equipped_defense);
+                is_defense_equipped = true;
+            } else out.println("You can't equip this item");
+        } else out.println("You don't have this item");
+    }
+
+    public void unequip(int item_id) {
+        if (inventory.containsValue(item_id)) {
+            if (World.weapons.contains(item_id)) {
+                if (is_weapon_equipped) {
+                    inventory.put(inventory.size(), item_id);
+                    added_damage = 0;
+                    equipped_weapon = -1;
+                    is_weapon_equipped = false;
+                }
+            } else if (World.armors.contains(item_id)) {
+                if (is_armor_equipped) {
+                    inventory.put(inventory.size(), item_id);
+                    added_armor = 0;
+                    equipped_armor = -1;
+                    is_armor_equipped = false;
+                }
+            } else if (World.defend_items.contains(item_id)) {
+                if (is_defense_equipped) {
+                    inventory.put(inventory.size(), item_id);
+                    added_defense = 0;
+                    equipped_defense = -1;
+                    is_defense_equipped = false;
+                }
+            }
+        }
+    }
+
+    public void block() {
+        if (!is_defending)
+            armor += added_defense + block_level;
+        is_defending = true;
+        if (mana < max_mana)
+            mana += 0.1;
+    }
+
+    public void unblock() {
+        if (is_defending) {
+            armor -= added_defense;
+            armor -= block_level;
+        }
+        is_defending = false;
+    }
+
+    public void attack() {
+        if (chosen_creature != null) {
+            int damage = base_damage + added_damage - chosen_creature.armor - chosen_creature.added_armor;
+            if (chosen_creature.is_defending)
+                damage -= (chosen_creature.block_level + chosen_creature.added_defense);
+            if (damage < 0)
+                damage = 0;
+            chosen_creature.health -= damage;
+            if (chosen_creature.health <= 0) {
+                chosen_creature.dead = true;
+            }
+
+            unblock();
+        } else out.println("Choose creature to attack");
+        if (mana < max_mana)
+            mana += 0.1;
+    }
+
+    public void magicAttack() {
+        if (chosen_creature != null) {
+            if (mana >= 10) {
+                chosen_creature.health -= 30;
+                mana -= 10;
+            } else out.println("Not enough mana");
+        } else out.println("Choose creature to attack");
+    }
+}
