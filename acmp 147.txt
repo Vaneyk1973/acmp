@@ -1,0 +1,23 @@
+import java.io.PrintStream;
+import java.util.Scanner;
+
+public class Main {
+
+    public static Scanner sc = new Scanner(System.in);
+    public static PrintStream out = new PrintStream(System.out);
+
+    public static void main(String[] args) {
+        int n = sc.nextInt(), a0 = 0, a = 1, N = -1;
+        for (int i = 0; i <= n; i++) {
+            if (i > 1) {
+                N = a + a0;
+                a0 = a;
+                a = N;
+            } else {
+                N++;
+            }
+
+        }
+        out.println(N);
+    }
+}
