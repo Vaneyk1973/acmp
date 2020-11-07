@@ -1,0 +1,113 @@
+import java.io.PrintStream;
+import java.util.Scanner;
+
+public class Main {
+    public static Scanner sc = new Scanner(System.in);
+    public static PrintStream out = System.out;
+
+    public static void main(String[] args) {
+        Complex[] c = new Complex[12];
+        c[10] = new Complex(3, 4);
+        c[11] = new Complex(1.0 / 2, Math.sqrt(3) / 2);
+        for (int i = 0; i < 10; i++) {
+            c[i] = new Complex(i + 2 - 3 * i, i * i - 5 * i);
+            out.println(c[i]);
+        }
+        out.println(c[10].toString());
+        out.println("\n" + "Сумма " + c[1] + " и " + c[9]);
+        out.println(c[9].add(c[1]));
+        out.println("\n" + "Разность " + c[1] + " и " + c[9]);
+        out.println(c[9].subtract(c[1]));
+        out.println("\n" + "Произведение " + c[1] + " и " + c[9]);
+        out.println(c[9].mult(c[1]));
+        out.println("\n" + "Частное " + c[1] + " и " + c[9]);
+        out.println(c[9].div(c[1]));
+        out.println("\n" + "Модуль " + c[10]);
+        out.println(c[10].abs());
+        out.println("\n" + "Равенство " + c[1] + " и " + c[9]);
+        out.println(Complex.equals(c[1], c[9]));
+        out.println("\n" + "Равенство " + c[7] + " и " + c[7]);
+        out.println(c[7].equals(c[7]));
+    }
+}
+
+class Complex {
+    public static Scanner sc = new Scanner(System.in);
+    public static PrintStream out = System.out;
+
+    double real, imag;
+
+
+    Complex() {
+        real = 0;
+        imag = 0;
+    }
+
+    Complex(double real, double imag) {
+        this.real = real;
+        this.imag = imag;
+    }
+
+    Complex(Complex c) {
+        this.real = c.real;
+        this.imag = c.imag;
+    }
+
+    public String toString() {
+        if (this.imag >= 0)
+            return this.real + "+" + this.imag + "i";
+        else return this.real + "" + this.imag + "i";
+    }
+
+    public static boolean equals(Complex c, Complex c1) {
+        return c.real == c1.real && c.imag == c1.imag;
+    }
+
+    public boolean equals(Complex c) {
+        return this.real == c.real && this.imag == c.imag;
+    }
+
+    public static Complex conjugate(Complex c) {
+        return new Complex(c.real, -c.imag);
+    }
+
+    public static boolean checkReal(Complex c) {
+        return c.imag == 0;
+    }
+
+    public static boolean checkImaginary(Complex c) {
+        return c.real == 0;
+    }
+
+    public double getReal() {
+        return this.real;
+    }
+
+    public double getImaginary() {
+        return this.imag;
+    }
+
+    public Complex neg() {
+        return new Complex(-this.real, -this.imag);
+    }
+
+    public Complex add(Complex c1) {
+        return new Complex(this.real + c1.real, this.imag + c1.imag);
+    }
+
+    public Complex subtract(Complex c1) {
+        return new Complex(this.real - c1.real, this.imag - c1.imag);
+    }
+
+    public Complex mult(Complex c1) {
+        return new Complex(this.real * c1.real - this.imag * c1.imag, this.real * this.imag + c1.real * c1.imag);
+    }
+
+    public Complex div(Complex c1) {
+        return new Complex((this.real * c1.real + this.imag * c1.imag) / (c1.real * c1.real + c1.imag * c1.imag), (this.imag * c1.real - this.real * c1.imag) / (c1.real * c1.real + c1.imag * c1.imag));
+    }
+
+    public double abs() {
+        return Math.sqrt(this.real * this.real + this.imag * this.imag);
+    }
+}
