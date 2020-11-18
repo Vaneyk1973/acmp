@@ -1,0 +1,277 @@
+
+import java.util.Arrays;
+
+public class Matrix {
+    private int dimensions;
+    private int[][] matrix;
+
+    Matrix() {
+        dimensions = 1;
+        matrix = new int[dimensions][dimensions];
+        Arrays.fill(matrix, 0);
+    }
+
+    Matrix(int dimensions) {
+        this.dimensions = dimensions;
+        matrix = new int[dimensions][dimensions];
+        Arrays.fill(matrix, 0);
+    }
+
+    Matrix(int[][] matrix) {
+        dimensions = matrix.length;
+        this.matrix = new int[dimensions][dimensions];
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                this.matrix[i][j] = matrix[i][j];
+            }
+        }
+    }
+
+    Matrix(Matrix matrix) {
+        dimensions = matrix.dimensions;
+        this.matrix = new int[dimensions][dimensions];
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                this.matrix[i][j] = matrix.matrix[i][j];
+            }
+        }
+    }
+
+    public void makeUnit() {
+        for (int i = 0; i < dimensions; i++) {
+            matrix[i][i] = 1;
+        }
+    }
+
+    public void fillRandom(int a, int b) {
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                matrix[i][j] = (int) (Math.random() * (b - a) + a);
+            }
+        }
+    }
+
+
+    public String toString() {
+        String a = "";
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                a += matrix[i][j] + " ";
+            }
+            a += "\n";
+        }
+        return a;
+    }
+
+    public void printString() {
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+        }
+        System.out.print("\n");
+    }
+
+    public void printTable() {
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                System.out.print(matrix[i][j] + " ");
+            }
+            System.out.print("\n");
+        }
+        System.out.print("\n");
+    }
+
+    public void add(Matrix matrix1) {
+        if (dimensions == matrix1.dimensions) {
+            Matrix m2 = new Matrix(dimensions);
+            for (int i = 0; i < dimensions; i++) {
+                for (int j = 0; j < dimensions; j++) {
+                    matrix[i][j] += matrix1.matrix[i][j];
+                }
+            }
+        } else {
+            System.out.println("Matrices must have same dimensions to be added");
+        }
+    }
+
+    public void sub(Matrix matrix1) {
+        if (dimensions == matrix1.dimensions) {
+            Matrix m2 = new Matrix(dimensions);
+            for (int i = 0; i < dimensions; i++) {
+                for (int j = 0; j < dimensions; j++) {
+                    m2.matrix[i][j] = matrix[i][j] - matrix1.matrix[i][j];
+                }
+            }
+        } else {
+            System.out.println("Matrices must have same dimensions to be subtracted");
+        }
+    }
+
+    public void divMat(Matrix matrix1) {
+        if (dimensions == matrix1.dimensions) {
+            Matrix m2 = new Matrix(dimensions);
+            for (int i = 0; i < dimensions; i++) {
+                for (int j = 0; j < dimensions; j++) {
+                    m2.matrix[i][j] = matrix[i][j] / matrix1.matrix[i][j];
+                }
+            }
+        } else {
+            System.out.println("Matrices must have same dimensions to be divided");
+        }
+    }
+
+    public void multMat(Matrix matrix1) {
+        if (dimensions == matrix1.dimensions) {
+            int[][] a = new int[dimensions][dimensions];
+            for (int i = 0; i < dimensions; i++) {
+                for (int j = 0; j < dimensions; j++) {
+                    a[i][j] = matrix[i][j];
+                }
+            }
+            int sum = 0;
+            Matrix m2 = new Matrix(dimensions);
+            for (int i = 0; i < dimensions; i++) {
+                for (int j = 0; j < matrix1.dimensions; j++) {
+                    for (int k = 0; k < dimensions; k++) {
+                        sum += a[j][k] * matrix1.matrix[k][i];
+                    }
+                    m2.matrix[i][j] = sum;
+                    sum = 0;
+                }
+            }
+        } else {
+            System.out.println("Amount of columns in first matrix must be equal to amount of rows in second matrix");
+        }
+    }
+
+    //умножение на число
+    public void mult(int a) {
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                matrix[i][j] *= a;
+            }
+        }
+    }
+
+    //деление на число
+    public void div(int a) {
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                matrix[i][j] /= a;
+            }
+        }
+    }
+
+    public Matrix transpose() {
+        Matrix matrix1 = new Matrix(dimensions);
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                matrix1.matrix[j][i] = this.matrix[i][j];
+            }
+        }
+        return matrix1;
+    }
+
+    public int sum() {
+        int sum = 0;
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                sum += matrix[i][j];
+            }
+        }
+        return sum;
+    }
+
+    public int trace() {
+        int sum = 0;
+        for (int i = 0; i < dimensions; i++) {
+            sum += matrix[i][i];
+        }
+        return sum;
+    }
+
+    public int getElement(int index) {
+        if (index < dimensions * dimensions && index >= 0) {
+            int a = 0;
+            for (int i = 0; i < dimensions; i++) {
+                for (int j = 0; j < dimensions; j++) {
+                    a++;
+                    if (a == index) {
+                        return matrix[i][j];
+                    }
+                }
+            }
+        } else {
+            System.out.println("Index is out of bounds");
+        }
+        return -1;
+    }
+
+    public int getElement(int x, int y) {
+        if (x < dimensions && x >= 0) {
+            if (y < dimensions && y >= 0) {
+                return matrix[x][y];
+            } else {
+                System.out.println("Index y is out of bounds");
+                return -1;
+            }
+        } else {
+            System.out.println("Index x is out of bounds");
+            return -1;
+        }
+    }
+
+    public int getN() {
+        return dimensions;
+    }
+
+    public int max() {
+        int max = Integer.MIN_VALUE;
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                if (matrix[i][j] > max) {
+                    max = matrix[i][j];
+                }
+            }
+        }
+        return max;
+    }
+
+    public int min() {
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                if (matrix[i][j] < min) {
+                    min = matrix[i][j];
+                }
+            }
+        }
+        return min;
+    }
+
+    public double mean() {
+        double mean;
+        int sum = 0, amount = 0;
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                sum += matrix[i][j];
+                amount++;
+            }
+        }
+        return sum / (amount * 1.0);
+    }
+
+    public boolean isDiagonal() {
+        boolean is_diagonal = false;
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                if (i != j && matrix[i][j] == 0) {
+                    is_diagonal = true;
+                } else if (i != j && matrix[i][j] != 0) {
+                    return false;
+                }
+            }
+        }
+        return is_diagonal;
+    }
