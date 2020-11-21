@@ -1,0 +1,36 @@
+import java.io.PrintStream;
+import java.util.Scanner;
+
+public class Main {
+    public static Scanner sc=new Scanner(System.in);
+    public static PrintStream out=System.out;
+
+    static int i=-1;
+    static double sum=0;
+    public static double fraction(double[] a, double[]b){
+        i++;
+        if (i<b.length-2)
+        {
+            sum+=b[i]+a[i+1]/fraction(a, b);
+        }
+        else {
+            sum+=b[i]+a[i+1]/b[i+1];
+        }
+        return sum;
+    }
+
+    public static void main(String[] args) {
+        int n=sc.nextInt();
+        double[] a=new double[n+1], b=new double[n];
+        a[0]=0;
+        for (int i=0;i<n;i++)
+        {
+            a[i+1]=sc.nextDouble();
+        }
+        for (int i=0;i<n;i++)
+        {
+            b[i]=sc.nextDouble();
+        }
+        System.out.print(fraction(a, b));
+    }
+}
