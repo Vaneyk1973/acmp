@@ -31,30 +31,24 @@ public class Main {
     }
 }
 
-class Complex {
+class Complex<T extends Number> {
     public static Scanner sc = new Scanner(System.in);
     public static PrintStream out = System.out;
 
-    double real, imag;
+    T real, imag;
 
-
-    Complex() {
-        real = 0;
-        imag = 0;
-    }
-
-    Complex(double real, double imag) {
-        this.real = real;
-        this.imag = imag;
+    Complex(T real, T imag) {
+        this.real = (T) real;
+        this.imag = (T) imag;
     }
 
     Complex(Complex c) {
-        this.real = c.real;
-        this.imag = c.imag;
+        this.real = (T) c.real;
+        this.imag = (T) c.imag;
     }
 
     public String toString() {
-        if (this.imag >= 0)
+        if ((double) this.imag >= 0)
             return this.real + "+" + this.imag + "i";
         else return this.real + "" + this.imag + "i";
     }
@@ -68,46 +62,46 @@ class Complex {
     }
 
     public static Complex conjugate(Complex c) {
-        return new Complex(c.real, -c.imag);
+        return new Complex(c.real, -(double) c.imag);
     }
 
     public static boolean checkReal(Complex c) {
-        return c.imag == 0;
+        return (double) c.imag == 0;
     }
 
     public static boolean checkImaginary(Complex c) {
-        return c.real == 0;
+        return (double) c.real == 0;
     }
 
-    public double getReal() {
+    public T getReal() {
         return this.real;
     }
 
-    public double getImaginary() {
+    public T getImaginary() {
         return this.imag;
     }
 
     public Complex neg() {
-        return new Complex(-this.real, -this.imag);
+        return new Complex(-(double) this.real, -(double) this.imag);
     }
 
     public Complex add(Complex c1) {
-        return new Complex(this.real + c1.real, this.imag + c1.imag);
+        return new Complex((double) this.real + (double) c1.real, (double) this.imag + (double) c1.imag);
     }
 
     public Complex subtract(Complex c1) {
-        return new Complex(this.real - c1.real, this.imag - c1.imag);
+        return new Complex((double) this.real - (double) c1.real, (double) this.imag - (double) c1.imag);
     }
 
     public Complex mult(Complex c1) {
-        return new Complex(this.real * c1.real - this.imag * c1.imag, this.real * this.imag + c1.real * c1.imag);
+        return new Complex((double) this.real * (double) c1.real - (double) this.imag * (double) c1.imag, (double) this.real * (double) this.imag + (double) c1.real * (double) c1.imag);
     }
 
     public Complex div(Complex c1) {
-        return new Complex((this.real * c1.real + this.imag * c1.imag) / (c1.real * c1.real + c1.imag * c1.imag), (this.imag * c1.real - this.real * c1.imag) / (c1.real * c1.real + c1.imag * c1.imag));
+        return new Complex(((double) this.real * (double) c1.real + (double) this.imag * (double) c1.imag) / ((double) c1.real * (double) c1.real + (double) c1.imag * (double) c1.imag), ((double) this.imag * (double) c1.real - (double) this.real * (double) c1.imag) / ((double) c1.real * (double) c1.real + (double) c1.imag * (double) c1.imag));
     }
 
     public double abs() {
-        return Math.sqrt(this.real * this.real + this.imag * this.imag);
+        return Math.sqrt((double) this.real * (double) this.real + (double) this.imag * (double) this.imag);
     }
 }
