@@ -35,7 +35,7 @@ public class Main {
             b[i] = sc.nextInt();  //denominators
         }
         for (int i = 0; i < n; i++) {
-            out.print(P(i, a, b)+"\t"+Q(i, a, b)+"\n");
+            out.print(P(i, a, b)+"\t"+Q(i, a, b)+"\n");  //Pn    Qn 
         }
     }
 }
