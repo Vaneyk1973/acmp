@@ -27,6 +27,14 @@ public class Main {
             else if (string.contains("might") || string.contains("would"))
                 out.print(2);
             else out.print(0);
-        } else out.print("It's not a conditional sentence");
+        } else{
+            if (string.contains("Should"))
+                out.print(1+" inverted");
+            else if(string.contains("Were"))
+                out.print(2+" inverted");
+            else if(string.contains("Had"))
+                out.print(3+" inverted");
+            else out.print("It's not a conditional sentence");
+        }
     }
 }
