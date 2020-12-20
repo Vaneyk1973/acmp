@@ -22,10 +22,10 @@ public class Main {
                 out.print(1);
             else if (string.contains("had") && string.contains("have"))
                 out.print(3);
-            else if (string.contains("had") && string.contains("would"))
-                out.print("Mixed");
             else if (string.contains("might") || string.contains("would"))
                 out.print(2);
+            else if (string.contains("had") && string.contains("would"))
+                out.print("Mixed");
             else out.print(0);
         } else{
             if (string.contains("Should"))
