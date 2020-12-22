@@ -1,0 +1,34 @@
+<Books books:readable="yes">
+<E-book books:type="electronic">
+    <Book books:chapters="3" books:name="Book 2" 
+        text:font="Times New Roman" text:size="14">
+        <Chapter chapters:pages="2" chapters:id="B20">
+            <Page text:symbols="1024"/>
+            <Page text:symbols="1024"/>
+        </Chapter>
+        <Chapter chapters:pages="4" chapters:id="B21">
+            <Page text:symbols="1024"/>
+            <Page text:symbols="1024"/>
+            <Page text:symbols="1024"/>
+            <Page text:symbols="1024"/>
+        </Chapter>
+        <Chapter chapters:pages="1" chapters:id="B22">
+            <Page text:symbols="1024"/>
+        </Chapter>
+    </Book>
+</E-book>
+<Paper_book books:type="paper">
+    <Book books:chapters="2" books:name="Book 1" 
+        text:font="Arial" text:size="12">
+        <Chapter chapters:pages="2" chapters:id="B10">
+            <Page text:symbols="1024"/>
+            <Page text:symbols="1024"/>
+        </Chapter>
+        <Chapter chapters:pages="3" chapters:id="B11">
+            <Page text:symbols="1024"/>
+            <Page text:symbols="1024"/>
+            <Page text:symbols="1024"/>
+        </Chapter>
+    </Book>
+</Paper_book>
+</Books>
