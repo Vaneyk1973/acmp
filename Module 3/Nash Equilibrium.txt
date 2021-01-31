@@ -1,0 +1,65 @@
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+    public static Scanner sc = new Scanner(System.in);
+
+
+    public static void main(String args[]) {
+        int a = sc.nextInt(), b = sc.nextInt();
+        int[][][] profit = new int[a][b][2];
+        int[] maxA = new int[b], maxB = new int[a];
+        ArrayList<Integer> aPositions = new ArrayList<>(), bPositions = new ArrayList<>();
+        for (int i = 0; i < a; i++) {
+            maxB[i] = Integer.MIN_VALUE;
+        }
+        for (int i = 0; i < b; i++) {
+            maxA[i] = Integer.MIN_VALUE;
+        }
+        for (int k = 0; k < 2; k++) {
+            for (int i = 0; i < a; i++) {
+                for (int j = 0; j < b; j++) {
+                    profit[i][j][k] = sc.nextInt();
+                }
+            }
+        }
+        for (int i = 0; i < a; i++) {
+            for (int j = 0; j < b; j++) {
+                if (profit[i][j][1] > maxB[i]) {
+                    maxB[i] = profit[i][j][1];
+                }
+            }
+        }
+        for (int i = 0; i < b; i++) {
+            for (int j = 0; j < a; j++) {
+                if (profit[j][i][0] > maxA[i]) {
+                    maxA[i] = profit[j][i][0];
+                }
+            }
+        }
+
+        for (int i = 0; i < a; i++) {
+            for (int j = 0; j < b; j++) {
+                if (profit[i][j][1] == maxB[i]) {
+                    bPositions.add(i * b + j);
+                }
+            }
+        }
+        for (int i = 0; i < b; i++) {
+            for (int j = 0; j < a; j++) {
+                if (profit[j][i][0] == maxA[i]) {
+                    aPositions.add(j * b + i);
+                }
+            }
+        }
+
+        for (int i = 0; i < bPositions.size(); i++) {
+            for (int j = 0; j < aPositions.size(); j++) {
+                if (aPositions.get(j).equals(bPositions.get(i))) {
+                    System.out.println(profit[bPositions.get(i) / b][bPositions.get(i) % b][0] + "," + profit[aPositions.get(j) / b][aPositions.get(j) % b][1]);
+                }
+            }
+        }
+    }
+}
