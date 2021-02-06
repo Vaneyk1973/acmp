@@ -141,14 +141,16 @@ class CellularAutomatonSurfaceView extends SurfaceView implements SurfaceHolder.
             Bitmap b=Bitmap.createScaledBitmap(bitmap, 900, 900, false);
             while (running) {
                 c = surfaceHolder.lockCanvas();
-                c.drawColor(Color.WHITE);
-                if (previous_ruleN!=CellularAutomatonActivity.ruleN){
-                    previous_ruleN=CellularAutomatonActivity.ruleN;
-                    drawCells(bitmap, previous_ruleN);
-                    b=Bitmap.createScaledBitmap(bitmap, 900, 900, false);
+                if (c!=null){
+                    c.drawColor(Color.WHITE);
+                    if (previous_ruleN!=CellularAutomatonActivity.ruleN){
+                        previous_ruleN=CellularAutomatonActivity.ruleN;
+                        drawCells(bitmap, previous_ruleN);
+                        b=Bitmap.createScaledBitmap(bitmap, 900, 900, false);
+                    }
+                    c.drawBitmap(b, 50, 50, paint);
+                    surfaceHolder.unlockCanvasAndPost(c);
                 }
-                c.drawBitmap(b, 50, 50, paint);
-                surfaceHolder.unlockCanvasAndPost(c);
                 try {
                     Thread.sleep(100);
                 } catch (InterruptedException e) {

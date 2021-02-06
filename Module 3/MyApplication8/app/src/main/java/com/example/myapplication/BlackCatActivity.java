@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -79,7 +81,7 @@ class CatDraw extends SurfaceView implements SurfaceHolder.Callback{
             xhovered=event.getX();
             yhovered=event.getY();
             float xtouch=x-xhovered, ytouch=y-yhovered;
-            if (xtouch*xtouch+ytouch*ytouch<=50*50){
+            if (xhovered>=x&&xhovered<=x+100&&yhovered>=y&&yhovered<=y+100){
                 hovered =true;
                 Toast.makeText(getContext(), "Congratulations, you've found a cat!", Toast.LENGTH_LONG).show();
             }
@@ -88,7 +90,7 @@ class CatDraw extends SurfaceView implements SurfaceHolder.Callback{
             xhovered=event.getX();
             yhovered=event.getY();
             float xtouch=x-xhovered, ytouch=y-yhovered;
-            if (xtouch*xtouch+ytouch*ytouch<=50*50){
+            if (xhovered>=x&&xhovered<=x+100&&yhovered>=y&&yhovered<=y+100){
                 hovered =true;
                 Toast.makeText(getContext(), "Congratulations, you've found a cat!", Toast.LENGTH_LONG).show();
             }
@@ -113,8 +115,7 @@ class CatDraw extends SurfaceView implements SurfaceHolder.Callback{
                     paint.setColor(Color.YELLOW);
                     paint.setAlpha(127);
                     canvas.drawCircle(xhovered, yhovered, 100, paint);
-                    paint.setColor(Color.argb(255, 20, 20, 20));
-                    canvas.drawCircle(x, y, 50, paint);
+                    canvas.drawBitmap(Bitmap.createScaledBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.cat), 100, 100, false), x, y, new Paint());
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             }
