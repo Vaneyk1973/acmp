@@ -168,7 +168,7 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    class Ship {
+    private class Ship {
         private boolean dead = false;
         private final Bitmap img;
         private Bitmap current_frame;
@@ -184,7 +184,7 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
             current_frame = Bitmap.createBitmap(img, img.getWidth() / 3, img.getHeight() / 8 * current_state, img.getWidth() / 3, img.getHeight() / 8);
         }
 
-        void move() {
+        private void move() {
             switch (pressed_button) {
                 case 0: {
                     current_state = 0;
@@ -205,7 +205,7 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        void shoot() {
+        private void shoot() {
             if (shot) {
                 laser_shots.add(new Laser(laser_img, ship));
                 laser_shots.get(laser_shots.size() - 1).going = true;
@@ -213,7 +213,7 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        void check_walls() {
+        private void check_walls() {
             if (current_x <= 5) {
                 current_x = canvas_width - current_frame.getWidth() - 5;
             } else if (current_x >= canvas_width - current_frame.getWidth() - 5) {
@@ -222,13 +222,13 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    class Asteroid {
+    private class Asteroid {
         Ship ship;
         float current_x, current_y;
         Bitmap img;
 
 
-        public Asteroid(Bitmap img, Ship ship) {
+         public Asteroid(Bitmap img, Ship ship) {
             this.img = img;
             this.ship = ship;
             current_x = (float) (Math.random() * canvas.getWidth());
@@ -236,20 +236,20 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
             asteroids.add(this);
         }
 
-        void move() {
+        private void move() {
             if (check_walls()) {
                 current_y += 10;
             }
         }
 
-        void explode() {
+        private void explode() {
             explosions.add(new Explosion(explosion_img));
             explosions.get(explosions.size() - 1).current_x = current_x;
             explosions.get(explosions.size() - 1).current_y = current_y;
             asteroids.remove(this);
         }
 
-        boolean check_walls() {
+        private boolean check_walls() {
             if (current_y < canvas.getHeight() - img.getHeight()) {
                 return true;
             }
@@ -257,14 +257,14 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
             return false;
         }
 
-        void check_ship() {
+        private void check_ship() {
             if (Math.abs(current_x + img.getWidth() / 2.0f - ship.current_frame.getWidth() / 2.0f - ship.current_x) <= img.getWidth() / 2.0f + ship.current_frame.getWidth() / 2.0f && current_y + img.getHeight() >= ship.current_y) {
                 ship.dead = true;
             }
         }
     }
 
-    class Laser {
+    private class Laser {
         private boolean going = false;
         private float current_x, current_y;
         private final Bitmap img;
@@ -289,16 +289,16 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
             }
         }
 
-        void go() {
+        private void go() {
             if (going) {
-                current_y += 10;
+                current_y -= 10;
             }
             if (check_collision()) {
                 going = false;
             }
         }
 
-        boolean check_collision() {
+        private boolean check_collision() {
             if (current_y <= 0) {
                 laser_shots.remove(this);
                 return true;
@@ -314,7 +314,7 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    static class Explosion {
+    private static class Explosion {
         long time, current_time;
         float current_x, current_y;
         Bitmap img;
