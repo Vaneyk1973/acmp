@@ -1,4 +1,3 @@
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -54,10 +53,11 @@ public class Main {
             }
         }
 
+        System.out.println("A,B");
         for (int i = 0; i < bPositions.size(); i++) {
             for (int j = 0; j < aPositions.size(); j++) {
                 if (aPositions.get(j).equals(bPositions.get(i))) {
-                    System.out.println(profit[bPositions.get(i) / b][bPositions.get(i) % b][0] + "," + profit[aPositions.get(j) / b][aPositions.get(j) % b][1]);
+                    System.out.println(aPositions.get(j) / b + "," + bPositions.get(i) % b);
                 }
             }
         }
