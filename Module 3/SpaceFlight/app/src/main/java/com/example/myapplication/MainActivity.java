@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Looper;
@@ -30,6 +31,7 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
     private boolean shot = false;
     private int pressed_button, canvas_width, canvas_height;
     private Ship ship;
+    private final int asteroid_width=4, asteroid_height=4;
     private final ArrayList<Asteroid> asteroids = new ArrayList<>();
     private final ArrayList<Laser> laser_shots = new ArrayList<>();
     private final ArrayList<Explosion> explosions = new ArrayList<>();
@@ -43,8 +45,8 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
             asteroid_img = BitmapFactory.decodeResource(getResources(), R.drawable.asteroid),
             explosion_img = Bitmap.createScaledBitmap(
                     BitmapFactory.decodeResource(getResources(), R.drawable.explosion),
-                    asteroid_img.getWidth() / 8,
-                    asteroid_img.getHeight() / 8, false);
+                    asteroid_img.getWidth() / asteroid_width,
+                    asteroid_img.getHeight() / asteroid_height, false);
     private Canvas canvas;
 
 
@@ -89,26 +91,68 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
 
     class DrawThread extends Thread {
         private final Paint paint = new Paint();
-        private volatile boolean running = true;
+        private final boolean running = true;
         private final SurfaceHolder surfaceHolder;
+        private float rotation=0;
+        private boolean neg=false;
+        Matrix matrix=new Matrix();
+        private final float a=2.66795f*25, b=10.47173f*25;
+        private final Bitmap comet=BitmapFactory.decodeResource(getResources(), R.drawable.comet);
+        private float cometX=602.5f+b-comet.getWidth()/3f, cometY=602.5f+comet.getHeight();
 
         public DrawThread(SurfaceHolder surfaceHolder) {
             this.surfaceHolder = surfaceHolder;
         }
 
+        private void cometMove(){
+           float x=cometX-602.5f-b+comet.getWidth()/3f, y;
+            if (neg)
+                x-=1;
+            else
+                x+=1;
+            y= (float) Math.sqrt(1-x*x/(b*b))*a;
+            if (x>=b)
+                neg=true;
+            else if (x<=-b)
+                neg=false;
+            if (!neg)
+                y=-y;
+            if (y<=0)
+            {
+                if (x<=b/2&&x>=-b/2)
+                    rotation=0;
+                else if (x>=b/2)
+                    rotation=30;
+                else if (x<=-b/2)
+                    rotation=-30;
+            }
+            else {
+                if (x<=b/2&&x>=-b/2)
+                    rotation=180;
+                else if (x>=b/2)
+                    rotation=150;
+                else if (x<=-b/2)
+                    rotation=210;
+            }
+            matrix.setRotate(rotation);
+            cometX=x+602.5f+b-comet.getWidth()/3f;
+            cometY=y+602.5f+comet.getHeight();
+        }
+
         @Override
         public void run() {
+            Bitmap turned_comet=Bitmap.createBitmap(comet, 0, 0, comet.getWidth(), comet.getHeight(), matrix, false);
             long time = System.currentTimeMillis(), current_time;
-            for (int i = 0; i < 8; i++) {
-                for (int j = 0; j < 8; j++) {
-                    textures[i * 8 + j] = Bitmap.createBitmap(asteroid_img, asteroid_img.getWidth() / 8 * i, asteroid_img.getHeight() / 8 * j, asteroid_img.getWidth() / 8, asteroid_img.getHeight() / 8);
+            for (int i = 0; i < asteroid_width; i++) {
+                for (int j = 0; j < asteroid_height; j++) {
+                    textures[i * asteroid_width + j] =Bitmap.createScaledBitmap(Bitmap.createBitmap(asteroid_img, asteroid_img.getWidth() / asteroid_width * i, asteroid_img.getHeight() / asteroid_height * j, asteroid_img.getWidth() / asteroid_width, asteroid_img.getHeight() / asteroid_height), 128, 128, false) ;
                 }
             }
             ship = new Ship(img, SpaceFlight.this);
             while (running) {
                 canvas = surfaceHolder.lockCanvas();
                 if (canvas != null) {
-                    if (ship.dead) {
+                    if (/*ship.dead*/false) {
                         canvas.drawColor(Color.RED);
                         paint.setColor(Color.BLACK);
                         paint.setTextSize(50);
@@ -118,10 +162,16 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
                         canvas_width = canvas.getWidth();
                         canvas_height = canvas.getHeight();
                         canvas.drawColor(Color.BLACK);
+                        paint.setColor(Color.RED);
+                        canvas.drawOval(600, 600, 600+b*2, 600+a*2, paint);
+                        paint.setColor(Color.BLACK);
+                        canvas.drawOval(600+5, 600+5, 600+b*2-5, 600+a*2-5, paint);
+                        canvas.drawBitmap(Bitmap.createBitmap(comet, 0, 0, comet.getWidth(), comet.getHeight(), matrix, false), cometX, cometY, paint);
+                        cometMove();
                         ship.move();
                         ship.check_walls();
                         if (current_time - time >= 2000) {
-                            new Asteroid(textures[(int) (Math.random() * 64 - 1)], ship);
+                            new Asteroid(textures[(int) (Math.random() * asteroid_width*asteroid_height - 1)], ship);
                             time = current_time;
                         }
                         if (laser_shots.size() != 0) {
@@ -156,11 +206,12 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
                                 asteroids.get(i).check_ship();
                             }
                         }
+
                     }
                     surfaceHolder.unlockCanvasAndPost(canvas);
                 }
                 try {
-                    Thread.sleep(10);
+                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -243,7 +294,7 @@ class SpaceFlight extends SurfaceView implements SurfaceHolder.Callback {
         }
 
         private void explode() {
-            explosions.add(new Explosion(explosion_img));
+            explosions.add(new Explosion(Bitmap.createScaledBitmap(explosion_img, 64 ,64, false)));
             explosions.get(explosions.size() - 1).current_x = current_x;
             explosions.get(explosions.size() - 1).current_y = current_y;
             asteroids.remove(this);
