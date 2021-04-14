@@ -1,0 +1,76 @@
+import java.io.PrintStream;
+
+import java.util.*;
+
+import java.util.Random;
+public class Main{
+    static Scanner sc=new Scanner(System.in);
+    static PrintStream out=System.out;
+
+    public static void main(String[] args){
+        AT1 array1=new AT1(20), array2=new AT1(20);
+        array1.fillArray(100, 20);
+        Arrays.fill(array2.a, 1);
+        AT2 at2=new AT2(20);
+        at2.fillArray(100, 20);
+        out.println(at2.binarySearch(15));
+    }
+
+
+}
+
+class AT1{
+    int[] a;
+    public AT1(int n){
+        a=new int[n];
+    }
+    public void fillArray(int rand, int n){
+        Random random = new Random();
+        if (n<a.length)
+            for (int i = 0; i < n; i++) {
+                a[i] = random.nextInt(rand);
+            }
+    }
+    //TODO напишите метод линейного поиска элемента num в массиве
+    public int linearSearch(int num){
+        for (int i=0;i<a.length;i++){
+            if (a[i]==num){
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+class AT2{
+    int[] a;
+    public AT2(int n){
+        a=new int[n];
+    }
+
+    public void fillArray(int rand, int n){
+        Random random = new Random();
+        if (n<a.length)
+            for (int i = 0; i < n; i++) {
+                a[i] = random.nextInt(rand);
+            }
+    }
+    //TODO напишите метод сортировки массива (можно использовать метод класса Arrays)
+    public void sort(int from, int to){
+        Arrays.sort(a, from, to);
+    }
+
+    //TODO напишите метод бинарного поиска элемента num в массиве
+    public int binarySearch(int num){
+        Arrays.sort(a);
+        int flag=a.length/2;
+        while (true){
+            if (a[flag]<num){
+                flag=flag+(a.length-flag)/2;
+            }
+            else if (a[flag]>num)
+                flag=flag/2;
+            else return flag;
+        }
+    }
+}
