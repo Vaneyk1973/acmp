@@ -1,0 +1,66 @@
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+    static PrintStream out = System.out;
+
+    public static void main(String[] args){
+        int n=sc.nextInt(), sum=0, sum1=0, d, g;
+        int[][] a=new int[n][2];
+        ArrayList<Float> b=new ArrayList<>(), c=new ArrayList<>();
+        for (int i=0;i<n;i++){
+            a[i][0]=sc.nextInt();
+            a[i][1]=sc.nextInt();
+            sum+=Math.min(a[i][0], a[i][1]);
+            b.add((float)Math.abs(a[i][0]-a[i][1]));
+        }
+        c= (ArrayList<Float>) b.clone();
+        if (sum%16==15)
+            out.print(sum);
+        else {
+            d=15-sum%16;
+            sum1=sum+d;
+            while (d!=0){
+                d-=min(c);
+                c.remove(min(c));
+                if (d<0){
+                    sum1+=16;
+                    d=sum1-sum+15-sum%16;
+                    c= (ArrayList<Float>) b.clone();
+                }
+            }
+        }
+        out.print(sum1);
+    }
+
+    public static float min(ArrayList<Float> a){
+        float min=Integer.MAX_VALUE;
+        for (int i=0;i<a.size();i++){
+            if (a.get(i)<min)
+                min=a.get(i);
+        }
+        return min;
+    }
+
+/*    static class Node{
+        int value=0;
+        Node left=new Node(), right=new Node();
+
+        public void add(int value){
+            if (this.value==0)
+                this.value=value;
+            else if (value<this.value)
+                left.add(value);
+            else right.add(value);
+        }
+
+
+        public void print(int h){
+
+        }
+    }*/
+}
