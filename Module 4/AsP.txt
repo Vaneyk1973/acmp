@@ -1,0 +1,75 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Main {
+
+    static Scanner sc = new Scanner(System.in);
+    static PrintStream out = System.out;
+
+    static ArrayList<Integer> addresses = new ArrayList<>();
+
+    public static void main(String[] args) throws FileNotFoundException {
+        /* i
+        1;5;96;98;2
+        ii
+        */
+        String address = "";
+        File file = new File(address);
+        FileOutputStream write = new FileOutputStream(file);
+        /*
+        iii
+        адрес участника 9001 будет совпадать с адресом участника 1001
+        iv
+        если уже записан адрес данного участника добавить к нему 100*/
+    }
+
+    //v
+    public static void add(int MemberID) {
+        int address = Hash(MemberID);
+        if (addresses.contains(address)) {
+            address += 100;
+            addresses.add(address);
+        } else addresses.add(address);
+    }
+
+    public static int Hash(int MemberID) {
+        return 0;
+    }
+
+    /*5 a i*/
+    public static void sort(int[] NameList) {
+        for (int ThisPointer = 1; ThisPointer <= 10; ThisPointer++) {
+            int Temp = NameList[ThisPointer];
+            int Pointer = ThisPointer - 1;
+            while ((NameList[Pointer] > Temp)) {
+                NameList[ThisPointer] = NameList[Pointer];
+                Pointer -= 1;
+            }
+
+            NameList[Pointer] = Temp;
+        }
+    }
+    /*ii
+     * 10*/
+    public static void swap(int a[], int i, int j) {
+        int temp = a[i];
+        a[i] = a[j];
+        a[j] = temp;
+    }
+
+    /*5 b ii
+    * 100*/
+    public static void bsort(int[] a) {
+        for (int i = 0; i < a.length - 1; i++) {
+            for (int j = 0; j < a.length - 1; j++) {
+                if (a[j] < a[j + 1]) {
+                    swap(a, j, j + 1);
+                }
+            }
+        }
+    }
+}
