@@ -1,0 +1,45 @@
+import java.io.PrintStream;
+import java.util.*;
+ 
+public class Main{
+ 
+    static Scanner sc = new Scanner(System.in);
+    static PrintStream out = System.out;
+ 
+    public static void main(String[] args) {
+        int n=sc.nextInt(), maxb=Integer.MIN_VALUE, h, maxg=Integer.MIN_VALUE, max;
+        ArrayList<Integer> boys=new ArrayList<>(), girls=new ArrayList<>();
+        for (int i=0;i<n;i++){
+            h=sc.nextInt();
+            if (h==0)
+                boys.add(sc.nextInt());
+            else girls.add(sc.nextInt());
+        }
+        if (boys.isEmpty())
+            maxb=0;
+        if (girls.isEmpty())
+            maxg=0;
+        boys.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        girls.sort(new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o2 - o1;
+            }
+        });
+        for (int i=1;i<boys.size();i++){
+            maxb=Math.max(maxb, boys.get(i-1)-boys.get(i));
+        }
+        for (int i=1;i<girls.size();i++){
+            maxg=Math.max(maxg, girls.get(i-1)-girls.get(i));
+        }
+        max=Math.max(maxb, maxg);
+        if (!boys.isEmpty()&&!girls.isEmpty())
+            out.println(Math.max(max, girls.get(0)-boys.get(boys.size()-1)));
+        else out.println(max);
+    }
+}
